@@ -1,0 +1,450 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ex: <http://example.com/ns#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix transit: <http://vocab.org/transit/terms/>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix bio: <http://purl.org/vocab/bio/0.1/> .
+@prefix gramps: <http://gramps-project.org/xml/1.7.1/> .
+
+@prefix lfd: <http://lfd.com/> .
+
+@base <http://example.com/ns#>.
+
+<#TagMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/tags/tag";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Tag/{@handle}";
+    rr:class lfd:Tag
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:tagName;
+    rr:objectMap [ rml:reference "@name" ]
+  ];
+.
+
+<#AttributeMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/people/person/attribute";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Attribute/{count(preceding::attribute)}";
+    rr:class lfd:Attribute;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:attributeType;
+    rr:objectMap [ rml:reference "@type" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:attributeValue;
+    rr:objectMap [ rml:reference "@value" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:citation;
+    rr:objectMap [
+      rr:parentTriplesMap <#CitationMapping>;
+      rr:joinCondition [
+        rr:child "citationref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+.
+
+
+<#NoteMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/notes/note";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Note/{@id}";
+    rr:class lfd:Note;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:note;
+    rr:objectMap [ rml:reference "text" ]
+  ];
+.
+
+<#PlaceobjMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/places/placeobj";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Place/{@id}";
+    rr:class lfd:Place;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:placeType;
+    rr:objectMap [ rml:reference "@type" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:placeTitle;
+    rr:objectMap [ rml:reference "ptitle" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:placeName;
+    rr:objectMap [ 
+      rml:reference "pname/@value" ;
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:longitude;
+    rr:objectMap [ rml:reference "coord/@long" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:latitude;
+    rr:objectMap [ rml:reference "coord/@lat" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:parentPlace;
+    rr:objectMap [
+      rr:parentTriplesMap <#PlaceobjMapping>;
+      rr:joinCondition [
+        rr:child "placeref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:citation;
+    rr:objectMap [
+      rr:parentTriplesMap <#CitationMapping>;
+      rr:joinCondition [
+        rr:child "citationref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:note;
+    rr:objectMap [
+      rr:parentTriplesMap <#NoteMapping>;
+      rr:joinCondition [
+        rr:child "noteref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+.
+
+<#SourceMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/sources/source";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Source/{@id}";
+    rr:class lfd:Source;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:sourceTitle;
+    rr:objectMap [ rml:reference "stitle" ]
+  ];
+.
+
+<#CitationMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/citations/citation";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Citation/{@id}";
+    rr:class lfd:Citation
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:citationPage;
+    rr:objectMap [ rml:reference "page" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:citationDate;
+    rr:objectMap [ rml:reference "dateval/@val" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:source;
+    rr:objectMap [
+      rr:parentTriplesMap <#SourceMapping>;
+      rr:joinCondition [
+        rr:child "sourceref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+.
+
+<#EventMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/events/event";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Event/{@id}";
+    rr:class lfd:Event
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:eventType;
+    rr:objectMap [ rml:reference "type" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:eventDate;
+    rr:objectMap [ rml:reference "dateval/@val" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:eventDescription;
+    rr:objectMap [ rml:reference "description" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:citation;
+    rr:objectMap [
+      rr:parentTriplesMap <#CitationMapping>;
+      rr:joinCondition [
+        rr:child "citationref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:place;
+    rr:objectMap [
+      rr:parentTriplesMap <#PlaceobjMapping>;
+      rr:joinCondition [
+        rr:child "place/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+.
+
+<#NameMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/people/person/name";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Name/{concat(../@id, '-', @type)}";
+    rr:class lfd:Name
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:familyName;
+    rr:objectMap [ rml:reference "./surname" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:givenName;
+    rr:objectMap [ rml:reference "./first" ]
+  ];
+.
+
+<#PersonMapping> a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/people/person";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Person/{@id}";
+    rr:class foaf:Person
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:gender;
+    rr:objectMap [
+      rml:reference "gender";
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:givenName;
+    rr:objectMap [
+      rml:reference "name[@type='Birth Name']/first"
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate foaf:familyName;
+    rr:objectMap [
+      rml:reference "name[@type='Birth Name']/surname"
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:altName;
+    rr:objectMap [
+      rr:parentTriplesMap <#NameMapping>;
+      rr:joinCondition [
+        rr:child "@id";
+        rr:parent "parent::person/@id";
+      ]
+    ]
+  ];
+  rr:predicateObjectMap [
+    rr:predicate lfd:tag;
+    rr:objectMap [
+      rr:parentTriplesMap <#TagMapping>;
+      rr:joinCondition [
+        rr:child "tagref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:event;
+    rr:objectMap [
+      rr:parentTriplesMap <#EventMapping>;
+      rr:joinCondition [
+        rr:child "eventref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:attribute;
+    rr:objectMap [
+      rr:parentTriplesMap <#AttributeMapping>;
+      rr:joinCondition [
+        rr:child "@id";
+        rr:parent "../@id";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:parentInFamily;
+    rr:objectMap [
+      rr:parentTriplesMap <#FamilyMapping>;
+      rr:joinCondition [
+        rr:child "parentin/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:childOfFamily;
+    rr:objectMap [
+      rr:parentTriplesMap <#FamilyMapping>;
+      rr:joinCondition [
+        rr:child "childof/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+.
+
+
+<#FamilyMapping> a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/families/family";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://lfd.com/Family/{@id}";
+    rr:class foaf:Family
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:citation;
+    rr:objectMap [
+      rr:parentTriplesMap <#CitationMapping>;
+      rr:joinCondition [
+        rr:child "citationref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:familyFather;
+    rr:objectMap [
+      rr:parentTriplesMap <#PersonMapping>;
+      rr:joinCondition [
+        rr:child "father/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:familyMother;
+    rr:objectMap [
+      rr:parentTriplesMap <#PersonMapping>;
+      rr:joinCondition [
+        rr:child "mother/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate lfd:familyOffsping;
+    rr:objectMap [
+      rr:parentTriplesMap <#PersonMapping>;
+      rr:joinCondition [
+        rr:child "childref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+.

@@ -1,0 +1,194 @@
+problem:
+- il y a plusieurs name pour une place, avec des langues
+- il y a plusieurs name pouru ne personne
+
+
+
+person/parentin/@hlink -> family/@handle
+person/@handle <- family/father/@hlink
+
+person/childof/@hlink -> family/@handle
+person/@handle <- family/childref/@hlink
+
+
+<family handle="xxxx" change="1424193389" id="waia-">
+    <rel type="Unknown"/>
+    <father hlink="_cf3f565ef7e74938674"/>
+    <childref hlink="_cf24a93e7f65284ae37"/>
+    <childref hlink="_cf24a93e82205588017"/>
+  </family>
+
+  <person handle="_cf3f565ef7e74938674" change="1424193374" id="I0238">
+    <gender>M</gender>
+    <name type="Birth Name">
+      <first>Waia</first>
+      <surname>Waia</surname>
+    </name>
+    <name alt="1" type="Nom traditionnel">
+        <first>Eisak</first>
+        <surname></surname>
+      </name>
+      <name alt="1" type="Nom traditionnel">
+        <first>Feiawe</first>
+        <surname></surname>
+        <citationref hlink="_e77c3f26ec35af9d75489634e52"/>
+      </name>
+    <parentin hlink="xxxx"/>
+  </person>
+      <name alt="1" type="Nom traditionnel">
+        <first>Eisak</first>
+        <surname></surname>
+      </name>
+      <name alt="1" type="Nom traditionnel">
+        <first>Feiawe</first>
+        <surname></surname>
+        <citationref hlink="_e77c3f26ec35af9d75489634e52"/>
+      </name>
+
+
+  <person handle="_cf24a93e7f65284ae37" change="1594032902" id="I0016">
+    <gender>M</gender>
+    <name type="Birth Name">
+      <first>Andrew</first>
+      <surname>Waia</surname>
+    </name>
+    <eventref hlink="_e7f65a5a67f3358edf9cd1f543" role="Primary"/>
+    <objref hlink="_d029809f5516dad19d3"/>
+    <objref hlink="_d02980bc1125997d31a"/>
+    <objref hlink="_d0da84b06994f991437"/>
+    <childof hlink="xxxx"/>
+    <parentin hlink="_cf24a93f0ac706ccac4"/>
+    <noteref hlink="_cf25212b6a14c1e4023"/>
+    <noteref hlink="_cf2521873db1b55bca4"/>
+    <noteref hlink="_cf44d38213f49a43de1"/>
+    <tagref hlink="_cf054d4cf915a7be074"/>
+    <tagref hlink="_cf250ead41b13b3ce6d"/>
+    <tagref hlink="_cf255aa46363e5122ff"/>
+    <tagref hlink="_cf2562e18f948ec9369"/>
+    <tagref hlink="_cf054d648cf2f4bb3d3"/>
+  </person>
+
+
+  <person handle="_cf24a93e82205588017" change="1594031934" id="I0022">
+    <gender>F</gender>
+    <name type="Birth Name">
+      <first>Erine</first>
+      <surname>Waia</surname>
+    </name>
+    <objref hlink="_d0da496392e45f9c2e7"/>
+    <objref hlink="_d0da497da150aaff9ca"/>
+    <objref hlink="_d0da49af7cd3a99cbc6"/>
+    <objref hlink="_d0da49e16e9741727d8"/>
+    <childof hlink="xxxx"/>
+    <parentin hlink="_cf24a93f0d83c6846fe"/>
+    <noteref hlink="_cf25185cc9f0fb43637"/>
+    <noteref hlink="_e7f65125a0e6fa15dead88539d6"/>
+    <tagref hlink="_cf054d4cf915a7be074"/>
+    <tagref hlink="_cf054d648cf2f4bb3d3"/>
+  </person>
+
+
+
+<tags>
+    <tag handle="_cf054d4cf915a7be074" change="1423497102" name="langue : tuwari" color="#efef29292929" priority="0"/>
+
+<events>
+        <event handle="_cf25330c3c849ceab22" change="1423491732" id="E0000">
+          <type>Marriage</type>
+          <dateval val="2014"/>
+        </event>
+        <event handle="_cf2533b2c493fa6e166" change="1423572761" id="E0001">
+          <type>Death</type>
+          <dateval val="2014-12-01"/>
+        </event>
+
+event/@handle <- person/eventref/@hlink
+        
+<person handle="_cf24a93ea8b7dbc993e" change="1594032693" id="I0084">
+            <gender>F</gender>
+            <name type="Birth Name">
+              <first>Margaret</first>
+              <surname>Joshua</surname>
+            </name>
+            <eventref hlink="_cf25330c3c849ceab22" role="Primary"/>
+      
+<families>
+                <family handle="_cf24a93f0ac706ccac4" change="1430478950" id="andrew-hilda">
+                  <rel type="Unknown"/>
+                  <father hlink="_cf24a93e7f65284ae37"/>
+                  <mother hlink="_cf24a93e83a50937c25"/>
+                  <childref hlink="_cf24a93eb87130e8e9f"/>
+                  <childref hlink="_cf24a93e7fc3d2d941b"/>
+                  <childref hlink="_cf24a93e8065bdd86c5"/>
+                  <childref hlink="_cf24a93e8015030d304"/>
+                  <childref hlink="_cf24a93e80b374dae9e"/>
+                  <childref hlink="_cf24a93e81103b6a41f"/>
+                  <citationref hlink="_d0297d4ab362f970bed"/>
+                </family>
+
+citationref/@hlink -> citation/@handle
+
+<citations>
+
+<citation handle="_d0297d4ab362f970bed" change="1430479073" id="C0019">
+                    <page>p. 52</page>
+                    <confidence>2</confidence>
+                    <sourceref hlink="_cf98e84ce164823fad1"/>
+                  </citation>
+<sources>                             
+    <source handle="_cf2594f70f7019378de" change="1594111877" id="S0000">
+        <stitle>2014.VI.34 - les migrations des clans Tau</stitle>
+        <objref hlink="_cf25944eab4475467d0"/>
+      </source>
+
+      objectref/@hlink -> object/@handle
+      <object handle="_cf25944eab4475467d0" change="1594047701" id="O0003">
+        <file src="../Containers/com.apple.Preview/Data/Desktop/Cahier VI/207.JPG" mime="image/jpeg" description="207"/>
+      </object>
+        
+Liens entre places
+<places>
+        <placeobj handle="_cf254a46f5e587a46e4" change="1610789778" id="P0000" type="Village">
+          <ptitle>Ok Isaï</ptitle>
+          <pname value="Ok Isaï"/>
+          <placeref hlink="_ea6697f35783d6ef9038e7db4e1"/>
+          <objref hlink="_d1fcb96aaa427621fb0"/>
+        </placeobj>
+        <placeobj handle="_cf255b7106415889e76" change="1610789513" id="P0002" type="Village">
+            <ptitle>Sumwari</ptitle>
+            <pname value="Sumwari"/>
+            <coord long="142.358688354" lat="-4.75188064575"/>
+            <placeref hlink="_ea6695dd8615e7defefdd46cdfd"/>
+            <noteref hlink="_dc1be45abe9435b43d5"/>
+            <noteref hlink="_dc1be8b0c40132696e8"/>
+            <noteref hlink="_e55c83316794fb558960f147461"/>
+            <noteref hlink="_e55c8454a5a70cd4e5fcd9e03b5"/>
+            <citationref hlink="_e56f32ab3aa3551d4a40dda7caf"/>
+            <citationref hlink="_e735555f687711614f0725a970b"/>
+                </placeobj>    
+
+                <ptitle>Duranmin</ptitle>
+                <pname value="Duranmin"/>
+                <pname value="Wani"/>
+                <pname value="Asabano" lang="Tuwari mountain"/>
+                <pname value="asba" lang="Tuwari mountain"/>
+                <pname value="konama" lang="Tuwari nambis"/>
+          
+<placeobj handle="_ea6697f35783d6ef9038e7db4e1" change="1610789805" id="P0028" type="Region">
+                    <pname value="Telefomin territory"/>
+                  </placeobj>
+
+<notes>
+                    <note handle="_cf24b3895272f6c187f" change="1423478361" id="N0000" type="Person Note">
+                      <text>Jeune homme de la côte (île près de Wewak) trouvé au village en 2014. Parle tok pisin, anglais et les deux langues de son île.
+                Depuis 2009, tourne dans la région. Revient de temps en temps dans son village d’après lui (la dernière fois il y a 8 mois).
+                Apporte tout un tas d’idées nouvelles. Introduit le foot. Essaye de faire financer un projet de ferme de poulet sur un programme de Telefolmin (1 pour Tau, un pour son village. Je l’aide à rédiger). Parents accueillants dans son île, recevant des touristes. Plusieurs jeunes de Tau sont scolarisés dans son coin. Parle bien anglais. Rêve d’être fermier. Fait le bénédicité quand il vient manger dans la famille ; prend les notes et rédige la sentence sur le chahier du village pendant les tribunaux : toujours celui à qui ont confie ce genre de tâche. Quand vient dîner quelque part, parle et tient les autres en haleine.
+                Est ici parce qu’il aurait aidé un gars du coin dans sa région qui lui rendrait maintenant la pareille ici. Pas très clair. Peut-être suspicion de ma part à l’égart de gens « trop beau pour être vrai », mais je ne peux m’empêcher de penser qu’il s’est mis au vert après avoir fait une bêtise chez lui, idée qui n’a pas beaucoup de support.
+                Après une histoire trouble où il a porté pleinte contre une fille qui le cherchait trop et avec laquelle il a couché, il est parti à Sumwari. S’est dit déjà marié au procès. Pour Mark (père de la fille), Saki, Joseph, c’est un menteur. Soutenu par irène et marc.
+                A Sumwari, m’explique qu’il a senti le vent du boulet (je suppose : si la fille était tombé enceinte).
+                Nombreuses bonnes discussions avec lui. La première fois, où on parlé de foot, j’ai eu l’impression d’avoir enfin un rapport normal, avec un égal. A plusieurs reprises au village, puis sur le chemin de Sumwari dans la maison de bush d’Eric j’ai débrieffé avec lui, puis à nouveau à Sumwari. Le seul à qui j’ai dit que je ne savais pas si je reviendrai.</text>
+                    </note>              
+
+
+
+

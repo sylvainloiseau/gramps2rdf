@@ -1,0 +1,15 @@
+- place can have reference to tag
+- handle language properly
+;
+      rml:languageMap [
+        rml:reference "pname/@lang"
+      ]
+
+
+- why citation are not in places?
+
+Requested to gramps:
+ 
+- add @alt=1 for alternate place name 
+- allow for other code name than 2-digits ISO code
+
