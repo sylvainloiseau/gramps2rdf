@@ -25,6 +25,9 @@ bash gramps3rdf.sh -i yourgrampsdocument.xml
 The conversion of gramps data borrows to the following vocabularies:
 
 - *Friend of a friend ontology* (http://xmlns.com/foaf/spec/)
+  - ```@prefix foaf: <http://xmlns.com/foaf/0.1/> .```
+  - class: ```foaf:Person```
+  - property: ```foaf:gender```
 - *BIO: A vocabulary for biographical information* (https://vocab.org/bio/)
 - *Person Name Vocabulary* (https://www.lodewijkpetram.nl/vocab/pnv/doc/)
 - *Bibliographic Ontology* (https://dcmi.github.io/bibo/)
