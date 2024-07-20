@@ -22,7 +22,7 @@ bash gramps3rdf.sh -i yourgrampsdocument.xml
 
 # Vocabularies used for the representation of gramps data
 
-The conversion of gramps data borrows to the following vocabularies:
+The conversion of gramps data borrows the following classes and properties from the following vocabularies:
 
 - *Friend of a friend ontology* (http://xmlns.com/foaf/spec/)
   - ```@prefix foaf: <http://xmlns.com/foaf/0.1/> .```
