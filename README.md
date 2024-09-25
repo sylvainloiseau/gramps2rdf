@@ -61,7 +61,9 @@ The conversion of gramps data borrows the following classes and properties from 
 
 | Gramps XML                  | RDF                                 |
 | --------------------------- | ----------------------------------- |
-| tag                         | ?                                   |
+| tags                        | -[a]-> skos:conceptScheme,skos:prefLabel="tags"|
+| tag                         | -[a]-> skos:Concept,-[skos:inScheme]->tags|
+| tag/name                    | skos:prefLabel                      |
 | person                      | -[a]-> foaf:Person                  |
 | person/gender               | -[foaf:gender]->                    |
 | person/name                 | -[pnv:hasName]-> ; see below Case 1 |
@@ -69,17 +71,17 @@ The conversion of gramps data borrows the following classes and properties from 
 | person/childof              | -[bio:father]-> and -[bio:mother]-> |
 | person/parentin             | -[bio:child]->                      |
 | person/noteref              | -[skos:note]-> '...'                |
-| person/citationref          | -[dcterm:isReferencedBy]->          |
-| person/tagref               |                                     |
+| person/citationref          | -[dcterm:references]->              |
+| person/tagref               | -[dcterm:references]->              |
 | person/eventref             | <-[bio:agent]-                      |
-| person/attribute            |                                     |
+| person/attribute            | -[a]-> skos:conceptScheme / skos:prefLabel=@value|
 | person/attribute/@type      |                                     |
-| person/attribute/@value     |                                     |
-| person/attribute/citationref|                                     |
+| person/attribute/@value     | -> BN[skos:Concept[-[skos:inScheme]->tags]]|
+| person/attribute/citationref| -> BN[dcterm:references]            |
 | family                      | ?                                   |
 | citation                    | -[a]-> cito:Citation                |
 | citation/confidence         | roar ou prov?                       |
-| citation/page               | ?                                   |
+| citation/page               | bibo:pages                          |
 | citation/sourceref          | -[dcterm:isReferencedBy]-> ? cf abo.|
 | source                      | bibo:Document                       |
 | source/stitle               | dcterm:title                        |
@@ -88,7 +90,7 @@ The conversion of gramps data borrows the following classes and properties from 
 | event/date                  | [bio:date]->                        |
 | event/place                 | [bio:date]->                        |
 | event/description           | rdf(s):desc? skos?                  |
-| object                      |                                     |
+| object                      | rico:Record                         |
 | place/@id                   | -[a]->  gn:Feature                  |
 | ?                           | -[rdf:about]-> https://sws.geonames.org/[id]
 | place/@type                 | -[gn:featureClass] -> gn:PPL, etc.  |
