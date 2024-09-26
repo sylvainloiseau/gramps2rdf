@@ -40,7 +40,7 @@ The conversion of gramps data borrows the following classes and properties from 
 
 - *Location Ontology (ArCo network)* (http://dati.beniculturali.it/lode/extract?url=https://raw.githubusercontent.com/ICCD-MiBACT/ArCo/master/ArCo-release/ontologie/location/location.owl)
 - *Time Ontology in OWL* (https://www.w3.org/TR/owl-time/)
-  - or sem below
+  - or sem below, Simple Event Model Ontology (https://semanticweb.cs.vu.nl/2009/11/sem/)
 
 ## Prefixes and URI
 
