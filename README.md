@@ -24,6 +24,7 @@ bash gramps3rdf.sh -i yourgrampsdocument.xml
 
 The conversion of gramps data borrows the following classes and properties from the following vocabularies:
 
+- *Record in context* (https://www.ica.org/resource/records-in-contexts-ontology/)
 - *Friend of a friend ontology* (http://xmlns.com/foaf/spec/)
   - ```@prefix foaf: <http://xmlns.com/foaf/0.1/> .```
   - class: ```foaf:Person```
@@ -42,6 +43,10 @@ The conversion of gramps data borrows the following classes and properties from 
 - *Time Ontology in OWL* (https://www.w3.org/TR/owl-time/)
   - or sem below, Simple Event Model Ontology (https://semanticweb.cs.vu.nl/2009/11/sem/)
 
+For the Family, no convenient type has been found in the vocabularies above. 
+A namespace <http://www.gramps-project.com/ns> has been used for the type
+`Family` and the relation `fatherInFamily`, `motherInFamily` and `offspringInFamily`
+
 ## Prefixes and URI
 
 ```
@@ -55,42 +60,71 @@ The conversion of gramps data borrows the following classes and properties from 
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix cito: <http://purl.org/spar/cito> .
 @prefix wgs: <https://www.w3.org/2003/01/geo/> .
+@prefix ric: <https://www.w3.org/2003/01/geo/> .
+@prefix grp: <http://www.gramps-project.com/ns> .
 ```
 
 ## Correspondance between gramps xml vocabulary and RDF vocabulary
 
+BN = blank node
+
+TODO : citation et place ont encore beaucoup de lfd:
+
 | Gramps XML                  | RDF                                 |
 | --------------------------- | ----------------------------------- |
-| tags                        | -[a]-> skos:conceptScheme,skos:prefLabel="tags"|
-| tag                         | -[a]-> skos:Concept,-[skos:inScheme]->tags|
-| tag/name                    | skos:prefLabel                      |
+| tags                        | -[a]-> skos:conceptScheme,          |
+|                             |    skos:prefLabel="tags"            |
+| tag                         | -[a]-> skos:Concept,                |
+|                             |   -[skos:inScheme]->tags            |
+|                             |   -[skos:prefLabel]-> "./name"      |
+| foreach distinct(person/attribute/@type)                          |
+|                             |-[a]-> skos:conceptScheme,           |
+|                             | skos:prefLabel="@type"              |
+[   for each distinct(person/attribute/@value)|-[a]-> skos:concept, |
+|                             |skos:inScheme="@type"                |
+|                             |skos:prefLabel="@value"              |
 | person                      | -[a]-> foaf:Person                  |
+|                             |   IRI : .../Person/@id              |
 | person/gender               | -[foaf:gender]->                    |
 | person/name                 | -[pnv:hasName]-> ; see below Case 1 |
-| person/object               |                                     |
-| person/childof              | -[bio:father]-> and -[bio:mother]-> |
-| person/parentin             | -[bio:child]->                      |
-| person/noteref              | -[skos:note]-> '...'                |
-| person/citationref          | -[dcterm:references]->              |
-| person/tagref               | -[dcterm:references]->              |
+| person/object               | TODO                                |
+| person/childof              | -[grp:offspringInFamily]->          |
+| person/parentin             | -[grp:parentInFamily]->             |
+| person/noteref              | -[skos:note]->                      |
+| person/citationref          | -[dcterms:references]->             |
+| person/tagref               | -[dcterms:references]->             |
 | person/eventref             | <-[bio:agent]-                      |
-| person/attribute            | -[a]-> skos:conceptScheme / skos:prefLabel=@value|
-| person/attribute/@type      |                                     |
-| person/attribute/@value     | -> BN[skos:Concept[-[skos:inScheme]->tags]]|
-| person/attribute/citationref| -> BN[dcterm:references]            |
-| family                      | ?                                   |
+| person/attribute            | -[a]->AttributeReference            |
+|                             |   -[dcterms:references]-> to the    |
+|                             |     sko:concept (see above attribute)|
+| person/attribute/citationref|    -[dcterms:references]->          |
+| family                      | -[a]-> grp:Family                   |
+| family/father               | -[grp:motherInFamily]->             |
+| family/mother               | -[grp:fatherInFamily]->             |
+| family/childref             |  -[grp:offspringInFamily]->            |
+| family/citationref          | dcterms:references                  |
 | citation                    | -[a]-> cito:Citation                |
 | citation/confidence         | roar ou prov?                       |
 | citation/page               | bibo:pages                          |
-| citation/sourceref          | -[dcterm:isReferencedBy]-> ? cf abo.|
+| citation/sourceref          | -[dcterms:isReferencedBy]-> ? cf abo.|
 | source                      | bibo:Document                       |
-| source/stitle               | dcterm:title                        |
+| source/stitle               | dcterms:title                        |
+| source/objectref            | -[dcterms:references]               |
+| object[file/mime="image/jpeg"]| -[a]-> bibo:Image                 |
+| object/file/@src            |      -[bibo:locator]->              |
+| object/file/@checksum       |      -[grp:checksum]->              |
+| object/file/@description    |      -[bibo:shortDescription]->     |
+| object[not(file/mime="image/jpeg")]| -[a]-> bibo:Document         |
+| object/file/@src            |      -[bibo:locator]->              |
+| object/file/@checksum       |      -[grp:checksum]->              |
+| object/file/@description    |      -[bibo:shortDescription]->     |
+| object/file/@mime           |      -[grp:mime]->                  |
 | event                       | -[a]-> bio:Event                    |
-| event/type                  | skos:type?                          |
-| event/date                  | [bio:date]->                        |
-| event/place                 | [bio:date]->                        |
-| event/description           | rdf(s):desc? skos?                  |
-| object                      | rico:Record                         |
+| event/type                  |   -[dcterms:type]->                 | pas sur une ref. et utiliser skos:concept
+| event/date                  |   -[bio:date]->                     |
+| event/place                 |   -[bio:place]->                    |
+| event/description           |   -[dcterms:description]->          | ? pas sur une ref biblio
+| event/citationref           |   -[dcterms:references]->           |
 | place/@id                   | -[a]->  gn:Feature                  |
 | ?                           | -[rdf:about]-> https://sws.geonames.org/[id]
 | place/@type                 | -[gn:featureClass] -> gn:PPL, etc.  |
@@ -101,8 +135,11 @@ The conversion of gramps data borrows the following classes and properties from 
 | place/pname/@lang           | ^lang                               |
 | place/placeref              | -[gn:parentFeature]->               |
 | place/objref                |                                     |
-| place/noteref               |                                     |
-
+| place/noteref               | -[skos:note]->                      |
+|
+|placeobj/citationref         dcterm:references
+|
+| note                        | -[a]->bibo:Note 
 ### Case 1: rendering of person name
 
 The ```pnv:hasName``` property link a ```foaf:Person``` to one or several ```pnv:PersonName```.

@@ -2,17 +2,35 @@
 @prefix rml: <http://semweb.mmlab.be/ns/rml#>.
 @prefix ex: <http://example.com/ns#>.
 @prefix ql: <http://semweb.mmlab.be/ns/ql#>.
-@prefix transit: <http://vocab.org/transit/terms/>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix bio: <http://purl.org/vocab/bio/0.1/> .
 @prefix gramps: <http://gramps-project.org/xml/1.7.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix pnv: <https://w3id.org/pnv#> .
 
+@prefix grp: <http://www.gramps-project.com/ns> .
 @prefix lfd: <http://lfd.com/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
 
 @base <http://example.com/ns#>.
+
+<#TagSchemeMapping>
+  a rr:TriplesMap;
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/conceptScheme/Tags";
+    rr:class skos:conceptScheme
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate skos:prefLabel;
+    rr:objectMap [ rr:constant "Tags" ]
+  ];
+.
 
 <#TagMapping>
   a rr:TriplesMap;
@@ -23,17 +41,65 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Tag/{@handle}";
-    rr:class lfd:Tag
+    rr:template "http://mycorpus.com/conceptScheme/Tag/{@handle}";
+    rr:class skos:Concept
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:tagName;
+    rr:predicate skos:prefLabel;
     rr:objectMap [ rml:reference "@name" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate skos:inScheme;
+    rr:objectMap [ rr:constant "http://mycorpus.com/conceptScheme/Tags" ]
   ];
 .
 
-<#AttributeMapping>
+<#AttributeSchemeMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "distinct-values(/database/people/person/attribute/@type)";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/AttributeScheme/{.}";
+    rr:class skos:conceptScheme
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate skos:prefLabel;
+    rr:objectMap [ rml:reference "."  ]
+  ];
+.
+
+<#AttributeConceptMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "distinct-values(/database/people/person/attribute/concat(@type, '---|---', @value))";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/AttributeConcept/{substring-before(.,'---|---')}/{substring-after(.,'---|---')}";
+    rr:class skos:Concept;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate skos:inScheme;
+    rr:objectMap [ rr:template "http://mycorpus.com/AttributeScheme/{substring-before(.,'---|---')}"; ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate skos:prefLabel;
+    rr:objectMap [ rml:reference "substring-after(.,'---|---')" ]
+  ];
+.
+
+<#AttributeOccurrenceMapping>
   a rr:TriplesMap;
   rml:logicalSource [
     rml:source "sample/gramps.xml" ;
@@ -42,22 +108,17 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Attribute/{count(preceding::attribute)}";
-    rr:class lfd:Attribute;
+    rr:template "http://mycorpus.com/AttributeOccurrence/{count(preceding::attribute)}";
+    rr:class grp:AttributeReference;
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:attributeType;
-    rr:objectMap [ rml:reference "@type" ]
+    rr:predicate dcterms:references;
+    rr:objectMap [ rr:template "http://mycorpus.com/AttributeConcept/{@type}/{@value}"; ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:attributeValue;
-    rr:objectMap [ rml:reference "@value" ]
-  ];
-
-  rr:predicateObjectMap [
-    rr:predicate lfd:citation;
+    rr:predicate dcterms:references;
     rr:objectMap [
       rr:parentTriplesMap <#CitationMapping>;
       rr:joinCondition [
@@ -68,7 +129,6 @@
   ];
 .
 
-
 <#NoteMapping>
   a rr:TriplesMap;
   rml:logicalSource [
@@ -78,15 +138,99 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Note/{@id}";
-    rr:class lfd:Note;
+    rr:template "http://mycorpus.com/Note/{@id}";
+    rr:class bibo:Note;
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:note;
+    rr:predicate bibo:content;
     rr:objectMap [ rml:reference "text" ]
   ];
+
 .
+
+
+<#ObjectImageMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/objects/object[file/@mime = 'image/jpeg']";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/Image/{@id}";
+    rr:class bibo:Image;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate bibo:locator;
+    rr:objectMap [ rml:reference "file/@src" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate bibo:shortDescription;
+    rr:objectMap [ rml:reference "file/description" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate grp:checksum;
+    rr:objectMap [ 
+      rml:reference "file/@checksum" ;
+    ]
+  ];
+.
+
+<#ObjectOtherMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/objects/object[not(file/@mime = 'image/jpeg')]";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/Document/{@id}";
+    rr:class bibo:Document;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate bibo:locator;
+    rr:objectMap [ rml:reference "file/@src" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate bibo:shortDescription;
+    rr:objectMap [ rml:reference "file/description" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate grp:checksum;
+    rr:objectMap [ 
+      rml:reference "file/@checksum" ;
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate grp:mime;
+    rr:objectMap [ 
+      rml:reference "file/@mime" ;
+    ]
+  ];
+.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <#PlaceobjMapping>
   a rr:TriplesMap;
@@ -97,7 +241,7 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Place/{@id}";
+    rr:template "http://mycorpus.com/Place/{@id}";
     rr:class lfd:Place;
   ];
 
@@ -140,7 +284,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:citation;
+    rr:predicate dcterms:references;
     rr:objectMap [
       rr:parentTriplesMap <#CitationMapping>;
       rr:joinCondition [
@@ -151,7 +295,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:note;
+    rr:predicate skos:note;
     rr:objectMap [
       rr:parentTriplesMap <#NoteMapping>;
       rr:joinCondition [
@@ -171,13 +315,35 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Source/{@id}";
-    rr:class lfd:Source;
+    rr:template "http://mycorpus.com/Source/{@id}";
+    rr:class bibo:Document;
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:sourceTitle;
+    rr:predicate dcterms:title;
     rr:objectMap [ rml:reference "stitle" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate dcterms:references;
+    rr:objectMap [
+      rr:parentTriplesMap <#ObjectImageMapping>;
+      rr:joinCondition [
+        rr:child "objref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate dcterms:references;
+    rr:objectMap [
+      rr:parentTriplesMap <#ObjectOtherMapping>;
+      rr:joinCondition [
+        rr:child "objref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
   ];
 .
 
@@ -190,7 +356,7 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Citation/{@id}";
+    rr:template "http://mycorpus.com/Citation/{@id}";
     rr:class lfd:Citation
   ];
 
@@ -225,27 +391,27 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Event/{@id}";
-    rr:class lfd:Event
+    rr:template "http://mycorpus.com/Event/{@id}";
+    rr:class bio:Event
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:eventType;
+    rr:predicate dcterms:type;
     rr:objectMap [ rml:reference "type" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:eventDate;
+    rr:predicate bio:date;
     rr:objectMap [ rml:reference "dateval/@val" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:eventDescription;
+    rr:predicate dcterms:description;
     rr:objectMap [ rml:reference "description" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:citation;
+    rr:predicate dcterms:references;
     rr:objectMap [
       rr:parentTriplesMap <#CitationMapping>;
       rr:joinCondition [
@@ -256,7 +422,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:place;
+    rr:predicate bio:place;
     rr:objectMap [
       rr:parentTriplesMap <#PlaceobjMapping>;
       rr:joinCondition [
@@ -276,18 +442,23 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Name/{concat(../@id, '-', @type)}";
-    rr:class lfd:Name
+    rr:template "http://mycorpus.com/Name/{concat(../@id, '-', @type)}";
+    rr:class pnv:PersonName
   ];
 
   rr:predicateObjectMap [
-    rr:predicate foaf:familyName;
+    rr:predicate pnv:surname;
     rr:objectMap [ rml:reference "./surname" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate foaf:givenName;
+    rr:predicate pnv:givenName;
     rr:objectMap [ rml:reference "./first" ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate pnv:nameSpecification;
+    rr:objectMap [ rml:reference "./@type" ]
   ];
 .
 
@@ -299,7 +470,7 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Person/{@id}";
+    rr:template "http://mycorpus.com/Person/{@id}";
     rr:class foaf:Person
   ];
 
@@ -325,7 +496,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:altName;
+    rr:predicate pnv:hasName;
     rr:objectMap [
       rr:parentTriplesMap <#NameMapping>;
       rr:joinCondition [
@@ -335,7 +506,7 @@
     ]
   ];
   rr:predicateObjectMap [
-    rr:predicate lfd:tag;
+    rr:predicate dcterms:references;
     rr:objectMap [
       rr:parentTriplesMap <#TagMapping>;
       rr:joinCondition [
@@ -346,23 +517,12 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:event;
+    rr:predicate bio:agent;
     rr:objectMap [
       rr:parentTriplesMap <#EventMapping>;
       rr:joinCondition [
         rr:child "eventref/@hlink";
         rr:parent "@handle";
-      ]
-    ]
-  ];
-
-  rr:predicateObjectMap [
-    rr:predicate lfd:attribute;
-    rr:objectMap [
-      rr:parentTriplesMap <#AttributeMapping>;
-      rr:joinCondition [
-        rr:child "@id";
-        rr:parent "../@id";
       ]
     ]
   ];
@@ -389,8 +549,35 @@
     ]
   ];
 
+  rr:predicateObjectMap [
+    rr:predicate dcterms:references;
+    rr:objectMap [
+      rr:parentTriplesMap <#CitationMapping>;
+      rr:joinCondition [
+        rr:child "citationref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
 .
 
+<#Personne2AttributeMapping> a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/people/person/attribute";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/Person/{../@id}";
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate dcterms:references;
+    rr:objectMap [ rr:template "http://mycorpus.com/AttributeOccurrence/{count(preceding::attribute)}"; ]
+  ];
+.
 
 <#FamilyMapping> a rr:TriplesMap;
   rml:logicalSource [
@@ -400,12 +587,12 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://lfd.com/Family/{@id}";
-    rr:class foaf:Family
+    rr:template "http://mycorpus.com/Family/{@id}";
+    rr:class grp:Family
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:citation;
+    rr:predicate dcterms:references;
     rr:objectMap [
       rr:parentTriplesMap <#CitationMapping>;
       rr:joinCondition [
@@ -416,7 +603,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:familyFather;
+    rr:predicate grp:fatherInFamily;
     rr:objectMap [
       rr:parentTriplesMap <#PersonMapping>;
       rr:joinCondition [
@@ -427,7 +614,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:familyMother;
+    rr:predicate grp:motherInFamily;
     rr:objectMap [
       rr:parentTriplesMap <#PersonMapping>;
       rr:joinCondition [
@@ -438,7 +625,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:familyOffsping;
+    rr:predicate grp:offspringInFamily;
     rr:objectMap [
       rr:parentTriplesMap <#PersonMapping>;
       rr:joinCondition [

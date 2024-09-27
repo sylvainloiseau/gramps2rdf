@@ -1,2 +1,2 @@
 # copy the file without its extension and set the path
-RML_JAR=/path/to/rmlmapper-[...].jar
+RML_JAR=/opt/rmlmapper-6.5.1-r371-all.jar
