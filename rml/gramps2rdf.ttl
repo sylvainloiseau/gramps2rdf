@@ -4,17 +4,18 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix bio: <http://purl.org/vocab/bio/0.1/> .
-@prefix gramps: <http://gramps-project.org/xml/1.7.1/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix pnv: <https://w3id.org/pnv#> .
-
 @prefix grp: <http://www.gramps-project.com/ns> .
-@prefix lfd: <http://lfd.com/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix gn: <https://www.geonames.org/ontology#> .
+@prefix wgs: <https://www.w3.org/2003/01/geo/> .
+@prefix cito: <http://purl.org/spar/cito> .
+
+@prefix rico: <https://www.w3.org/2003/01/geo/> .
 
 @base <http://example.com/ns#>.
 
@@ -149,7 +150,6 @@
 
 .
 
-
 <#ObjectImageMapping>
   a rr:TriplesMap;
   rml:logicalSource [
@@ -219,19 +219,6 @@
   ];
 .
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <#PlaceobjMapping>
   a rr:TriplesMap;
   rml:logicalSource [
@@ -242,38 +229,38 @@
 
   rr:subjectMap [
     rr:template "http://mycorpus.com/Place/{@id}";
-    rr:class lfd:Place;
+    rr:class gn:Feature;
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:placeType;
+    rr:predicate gn:featureClass;
     rr:objectMap [ rml:reference "@type" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:placeTitle;
+    rr:predicate gn:name;
     rr:objectMap [ rml:reference "ptitle" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:placeName;
+    rr:predicate gn:alternateName;
     rr:objectMap [ 
       rml:reference "pname/@value" ;
     ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:longitude;
+    rr:predicate wgs:long;
     rr:objectMap [ rml:reference "coord/@long" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:latitude;
+    rr:predicate wgs:lat;
     rr:objectMap [ rml:reference "coord/@lat" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:parentPlace;
+    rr:predicate gn:parentFeature;
     rr:objectMap [
       rr:parentTriplesMap <#PlaceobjMapping>;
       rr:joinCondition [
@@ -357,21 +344,21 @@
 
   rr:subjectMap [
     rr:template "http://mycorpus.com/Citation/{@id}";
-    rr:class lfd:Citation
+    rr:class cito:Citation
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:citationPage;
+    rr:predicate bibo:pages;
     rr:objectMap [ rml:reference "page" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:citationDate;
+    rr:predicate dcterms:date;
     rr:objectMap [ rml:reference "dateval/@val" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:source;
+    rr:predicate grp:source;
     rr:objectMap [
       rr:parentTriplesMap <#SourceMapping>;
       rr:joinCondition [
@@ -528,7 +515,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:parentInFamily;
+    rr:predicate grp:parentInFamily;
     rr:objectMap [
       rr:parentTriplesMap <#FamilyMapping>;
       rr:joinCondition [
@@ -539,7 +526,7 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate lfd:childOfFamily;
+    rr:predicate grp:childOfFamily;
     rr:objectMap [
       rr:parentTriplesMap <#FamilyMapping>;
       rr:joinCondition [
