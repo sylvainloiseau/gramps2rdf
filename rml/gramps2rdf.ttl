@@ -4,18 +4,17 @@
 @prefix ql: <http://semweb.mmlab.be/ns/ql#>.
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix bio: <http://purl.org/vocab/bio/0.1/> .
+@prefix gramps: <http://gramps-project.org/xml/1.7.1/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix pnv: <https://w3id.org/pnv#> .
+
 @prefix grp: <http://www.gramps-project.com/ns> .
+@prefix lfd: <http://lfd.com/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix bibo: <http://purl.org/ontology/bibo/> .
-@prefix gn: <https://www.geonames.org/ontology#> .
-@prefix wgs: <https://www.w3.org/2003/01/geo/> .
-@prefix cito: <http://purl.org/spar/cito> .
-
-@prefix rico: <https://www.w3.org/2003/01/geo/> .
 
 @base <http://example.com/ns#>.
 
@@ -150,6 +149,7 @@
 
 .
 
+
 <#ObjectImageMapping>
   a rr:TriplesMap;
   rml:logicalSource [
@@ -229,38 +229,38 @@
 
   rr:subjectMap [
     rr:template "http://mycorpus.com/Place/{@id}";
-    rr:class gn:Feature;
+    rr:class lfd:Place;
   ];
 
   rr:predicateObjectMap [
-    rr:predicate gn:featureClass;
+    rr:predicate lfd:placeType;
     rr:objectMap [ rml:reference "@type" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate gn:name;
+    rr:predicate lfd:placeTitle;
     rr:objectMap [ rml:reference "ptitle" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate gn:alternateName;
+    rr:predicate lfd:placeName;
     rr:objectMap [ 
       rml:reference "pname/@value" ;
     ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate wgs:long;
+    rr:predicate lfd:longitude;
     rr:objectMap [ rml:reference "coord/@long" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate wgs:lat;
+    rr:predicate lfd:latitude;
     rr:objectMap [ rml:reference "coord/@lat" ]
   ];
 
   rr:predicateObjectMap [
-    rr:predicate gn:parentFeature;
+    rr:predicate lfd:parentPlace;
     rr:objectMap [
       rr:parentTriplesMap <#PlaceobjMapping>;
       rr:joinCondition [
@@ -290,19 +290,6 @@
         rr:parent "@handle";
       ]
     ]
-  ];
-.
-
-<#SourceMapping>
-  a rr:TriplesMap;
-  rml:logicalSource [
-    rml:source "sample/gramps.xml" ;
-    rml:iterator "/database/sources/source";
-    rml:referenceFormulation ql:XPath;
-  ];
-
-  rr:subjectMap [
-    rr:template "http://mycorpus.com/Source/{@id}";
     rr:class bibo:Document;
   ];
 
@@ -606,6 +593,19 @@
       rr:parentTriplesMap <#PersonMapping>;
       rr:joinCondition [
         rr:child "mother/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate grp:offspringInFamily;
+    rr:objectMap [
+      rr:parentTriplesMap <#PersonMapping>;
+      rr:joinCondition [
+        rr:child "childref/@hlink";
+        rr:parent "@handle";
+      ]
         rr:parent "@handle";
       ]
     ]
