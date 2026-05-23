@@ -7,14 +7,13 @@
 
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix bio: <http://purl.org/vocab/bio/0.1/> .
-@prefix gramps: <http://gramps-project.org/xml/1.7.1/> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix pnv: <https://w3id.org/pnv#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
 
 @prefix grp: <http://www.gramps-project.com/ns> .
 @prefix lfd: <http://lfd.com/> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix bibo: <http://purl.org/ontology/bibo/> .
 
 @base <http://example.com/ns#>.
 
