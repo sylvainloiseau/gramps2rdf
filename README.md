@@ -17,7 +17,7 @@ vim config # point to rmlmapper-7.0.0-r374-all.jar
 # Usage
 
 ```
-bash gramps3rdf.sh -i yourgrampsdocument.xml
+bash gramps2rdf.sh -i yourgrampsdocument.xml
 ```
 
 # Vocabularies used for the representation of gramps data
@@ -44,7 +44,7 @@ The conversion of gramps data borrows the following classes and properties from 
   - or sem below, Simple Event Model Ontology (https://semanticweb.cs.vu.nl/2009/11/sem/)
 
 For the Family, no convenient type has been found in the vocabularies above. 
-A namespace <http://www.gramps-project.com/ns> has been used for the type
+A namespace <http://www.gramps-project.com/ns#> has been used for the type
 `Family` and the relation `fatherInFamily`, `motherInFamily` and `offspringInFamily`
 
 ## Prefixes and URI
@@ -58,10 +58,10 @@ A namespace <http://www.gramps-project.com/ns> has been used for the type
 @prefix bio: <http://purl.org/vocab/bio/0.1/> .
 @prefix gn: <https://www.geonames.org/ontology#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix cito: <http://purl.org/spar/cito> .
+@prefix cito: <http://purl.org/spar/cito/> .
 @prefix wgs: <https://www.w3.org/2003/01/geo/> .
-@prefix rico: <https://www.w3.org/2003/01/geo/> .
-@prefix grp: <http://www.gramps-project.com/ns> .
+@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
+@prefix grp: <http://www.gramps-project.com/ns#> .
 ```
 
 ## Correspondance between gramps xml vocabulary and RDF vocabulary
@@ -90,7 +90,7 @@ TODO : citation et place ont encore beaucoup de lfd:
 | person/gender                       | -[foaf:gender]->                    |
 | person/name                         | -[pnv:hasName]-> ; see below Case 1 |
 | person/object                       | TODO                                |
-| person/childof                      | -[grp:offspringInFamily]->          |
+| person/childof                      | -[grp:childOfFamily]->              |
 | person/parentin                     | -[grp:parentInFamily]->             |
 | person/noteref                      | -[skos:note]->                      |
 | person/citationref                  | -[dcterms:references]->             |
@@ -101,8 +101,8 @@ TODO : citation et place ont encore beaucoup de lfd:
 |                                     |     sko:concept (see above attribute)|
 | person/attribute/citationref        |    -[dcterms:references]->          |
 | family                              | -[a]-> grp:Family                   |
-| family/father                       | -[grp:motherInFamily]->             |
-| family/mother                       | -[grp:fatherInFamily]->             |
+| family/father                       | -[grp:fatherInFamily]->             |
+| family/mother                       | -[grp:motherInFamily]->             |
 | family/childref                     |  -[grp:offspringInFamily]->         |
 | family/citationref                  | dcterms:references                  |
 | citation                            | -[a]-> cito:Citation ?              |

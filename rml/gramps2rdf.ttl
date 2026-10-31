@@ -11,18 +11,24 @@
 @prefix pnv: <https://w3id.org/pnv#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix cito: <http://purl.org/spar/cito/> .
 
-@prefix grp: <http://www.gramps-project.com/ns> .
+@prefix grp: <http://www.gramps-project.com/ns#> .
 @prefix lfd: <http://lfd.com/> .
 
 @base <http://example.com/ns#>.
 
 <#TagSchemeMapping>
   a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/tags";
+    rml:referenceFormulation ql:XPath;
+  ];
 
   rr:subjectMap [
     rr:template "http://mycorpus.com/conceptScheme/Tags";
-    rr:class skos:conceptScheme
+    rr:class skos:ConceptScheme
   ];
 
   rr:predicateObjectMap [
@@ -51,7 +57,7 @@
 
   rr:predicateObjectMap [
     rr:predicate skos:inScheme;
-    rr:objectMap [ rr:constant "http://mycorpus.com/conceptScheme/Tags" ]
+    rr:objectMap [ rr:constant <http://mycorpus.com/conceptScheme/Tags> ]
   ];
 .
 
@@ -65,7 +71,7 @@
 
   rr:subjectMap [
     rr:template "http://mycorpus.com/AttributeScheme/{.}";
-    rr:class skos:conceptScheme
+    rr:class skos:ConceptScheme
   ];
 
   rr:predicateObjectMap [
@@ -107,7 +113,7 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://mycorpus.com/AttributeOccurrence/{count(preceding::attribute)}";
+    rr:template "http://mycorpus.com/AttributeOccurrence/{../@id}-{count(preceding-sibling::attribute)}";
     rr:class grp:AttributeReference;
   ];
 
@@ -289,7 +295,42 @@
         rr:parent "@handle";
       ]
     ]
-    rr:class bibo:Document;
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate dcterms:references;
+    rr:objectMap [
+      rr:parentTriplesMap <#ObjectImageMapping>;
+      rr:joinCondition [
+        rr:child "objref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+
+  rr:predicateObjectMap [
+    rr:predicate dcterms:references;
+    rr:objectMap [
+      rr:parentTriplesMap <#ObjectOtherMapping>;
+      rr:joinCondition [
+        rr:child "objref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
+.
+
+<#SourceMapping>
+  a rr:TriplesMap;
+  rml:logicalSource [
+    rml:source "sample/gramps.xml" ;
+    rml:iterator "/database/sources/source";
+    rml:referenceFormulation ql:XPath;
+  ];
+
+  rr:subjectMap [
+    rr:template "http://mycorpus.com/Source/{@id}";
+    rr:class bibo:Document
   ];
 
   rr:predicateObjectMap [
@@ -404,6 +445,17 @@
       ]
     ]
   ];
+
+  rr:predicateObjectMap [
+    rr:predicate bio:agent;
+    rr:objectMap [
+      rr:parentTriplesMap <#PersonMapping>;
+      rr:joinCondition [
+        rr:child "@handle";
+        rr:parent "eventref/@hlink";
+      ]
+    ]
+  ];
 .
 
 <#NameMapping>
@@ -415,7 +467,7 @@
   ];
 
   rr:subjectMap [
-    rr:template "http://mycorpus.com/Name/{concat(../@id, '-', @type)}";
+    rr:template "http://mycorpus.com/Name/{../@id}-{count(preceding-sibling::name)}";
     rr:class pnv:PersonName
   ];
 
@@ -490,17 +542,6 @@
   ];
 
   rr:predicateObjectMap [
-    rr:predicate bio:agent;
-    rr:objectMap [
-      rr:parentTriplesMap <#EventMapping>;
-      rr:joinCondition [
-        rr:child "eventref/@hlink";
-        rr:parent "@handle";
-      ]
-    ]
-  ];
-
-  rr:predicateObjectMap [
     rr:predicate grp:parentInFamily;
     rr:objectMap [
       rr:parentTriplesMap <#FamilyMapping>;
@@ -533,6 +574,16 @@
     ]
   ];
 
+  rr:predicateObjectMap [
+    rr:predicate skos:note;
+    rr:objectMap [
+      rr:parentTriplesMap <#NoteMapping>;
+      rr:joinCondition [
+        rr:child "noteref/@hlink";
+        rr:parent "@handle";
+      ]
+    ]
+  ];
 .
 
 <#Personne2AttributeMapping> a rr:TriplesMap;
@@ -548,7 +599,7 @@
 
   rr:predicateObjectMap [
     rr:predicate dcterms:references;
-    rr:objectMap [ rr:template "http://mycorpus.com/AttributeOccurrence/{count(preceding::attribute)}"; ]
+    rr:objectMap [ rr:template "http://mycorpus.com/AttributeOccurrence/{../@id}-{count(preceding-sibling::attribute)}"; ]
   ];
 .
 
@@ -592,19 +643,6 @@
       rr:parentTriplesMap <#PersonMapping>;
       rr:joinCondition [
         rr:child "mother/@hlink";
-        rr:parent "@handle";
-      ]
-    ]
-  ];
-
-  rr:predicateObjectMap [
-    rr:predicate grp:offspringInFamily;
-    rr:objectMap [
-      rr:parentTriplesMap <#PersonMapping>;
-      rr:joinCondition [
-        rr:child "childref/@hlink";
-        rr:parent "@handle";
-      ]
         rr:parent "@handle";
       ]
     ]

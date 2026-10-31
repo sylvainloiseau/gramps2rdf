@@ -1,0 +1,103 @@
+@prefix ex: <http://example.com/ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix grp: <http://www.gramps-project.com/ns#> .
+
+@prefix schema: <http://xmlns.com/foaf/0.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix pnv: <https://w3id.org/pnv#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix bio: <http://purl.org/vocab/bio/0.1/> .
+@prefix gn: <https://www.geonames.org/ontology#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix wgs: <https://www.w3.org/2003/01/geo/> .
+
+#
+# Properties of a person
+#
+
+ex:PersonShape
+	a sh:NodeShape ;
+	sh:targetClass foaf:Person ;
+	sh:property [
+		sh:path pnv:hasName ;
+		sh:minCount 1 ;
+		sh:class pnv:PersonName ;
+		#sh:nodeKind sh:BlankNode ;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path foaf:gender ;
+		sh:datatype xsd:string ;
+		sh:pattern "^(M|F|U)$" ;
+	] ;
+	sh:property [
+		sh:path bio:father ;
+		sh:maxCount 1 ;
+		sh:class foaf:Person;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path bio:mother ;
+		sh:maxCount 1 ;
+		sh:class foaf:Person;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path bio:child ;
+		sh:class foaf:Person;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path foaf:givenName ;
+		sh:datatype xsd:string ;
+	] ;
+	sh:property [
+		sh:path foaf:familyName ;
+		sh:datatype xsd:string ;
+	] ;
+	sh:property [
+		sh:path dcterms:references ;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path skos:note ;
+		sh:class bibo:Note ;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path grp:parentInFamily ;
+		sh:class grp:Family ;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:property [
+		sh:path grp:childOfFamily ;
+		sh:class grp:Family ;
+		sh:nodeKind sh:IRI ;
+	] ;
+	sh:closed true ;
+	sh:ignoredProperties ( rdf:type ) .
+
+ex:NameShape
+	a sh:NodeShape ;
+	sh:targetClass pnv:PersonName ;
+	sh:property [
+		sh:path pnv:surname ;
+		sh:datatype xsd:string ;
+		sh:maxCount 1 ;
+	] ;
+	sh:property [
+		sh:path pnv:givenName ;
+		sh:datatype xsd:string ;
+		sh:maxCount 1 ;
+	] ;
+	sh:property [
+		sh:path pnv:nameSpecification ;
+		sh:datatype xsd:string ;
+		sh:maxCount 1 ;
+	] ;
+	sh:closed true ;
+	sh:ignoredProperties ( rdf:type ) .
