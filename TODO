@@ -1,21 +1,33 @@
-
-
-
-
-
+# TODO
 
 - place can have reference to tag
 - handle language properly
-;
+
       rml:languageMap [
         rml:reference "pname/@lang"
       ]
 
-
 - why citation are not in places?
 
-Requested to gramps:
- 
-- add @alt=1 for alternate place name 
+Requested to the gramps team:
+
+- add @alt=1 for alternate place name
 - allow for other code name than 2-digits ISO code
 
+# Done
+
+The XML mapping was used as the semantic reference, but it has defects that the new mapping
+must not reproduce:
+
+- `<#FamilyMapping>` contains a broken, duplicated `offspringInFamily` block, so the Turtle is
+  syntactically invalid as it stands.
+- `<#PlaceobjMapping>` absorbed the end of a missing `<#SourceMapping>` (stray
+  `rr:class bibo:Document`, `stitle` and `objref` inside the place map). **Sources are never
+  produced.**
+- The `cito:` prefix is used but not declared.
+- Name IRIs are `{person id}-{name type}`, so two alternate names of the same type (e.g. two
+  "Nom traditionnel") collapse into one node with mixed given names.
+- `bio:agent` is used Person → Event, but its direction is Event → Agent.
+- Attribute occurrences get IRIs from `count(preceding::attribute)`, which change on every edit.
+- The README swaps father and mother (`family/father → grp:motherInFamily`).
+- Joins via `rr:joinCondition` on XPath are slow. Here, joins are done in SQL instead (§5.3).
